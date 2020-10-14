@@ -26,7 +26,7 @@ for i in range(24):
     if not done:
         env.render()
         # obs, reward, done, info = env.step(LEFT)  # pass action to step()
-        actions = solver.get_actions(obs)
+        actions = solver.get_actions(obs, 6, 6)
         print(obs)
         for action in actions:
             obs, reward, done, info = env.step(int(action))  # pass action to step()
