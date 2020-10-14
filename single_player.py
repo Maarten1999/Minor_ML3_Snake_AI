@@ -16,20 +16,20 @@ RIGHT = 1
 DOWN = 2
 LEFT = 3
 
-env = SnakeEnv(grid_size=[6, 6], snake_size=2)
+env = SnakeEnv(grid_size=[24, 24], snake_size=2)
 obs = env.reset()  # construct instance of game
 contr = env.controller
 
 done = False
 log.info("start game")
-for i in range(24):
-    if not done:
+while not done:
+    env.render()
+    # obs, reward, done, info = env.step(LEFT)  # pass action to step()
+    actions = solver.get_actions(obs, 24, 24)
+    if len(actions) == 0:
+        done = True
+    for action in actions:
+        obs, reward, done, info = env.step(int(action))  # pass action to step()
         env.render()
-        # obs, reward, done, info = env.step(LEFT)  # pass action to step()
-        actions = solver.get_actions(obs, 6, 6)
-        print(obs)
-        for action in actions:
-            obs, reward, done, info = env.step(int(action))  # pass action to step()
-            env.render()
-            log.info("reward: %.0f", reward)
+        # log.info("reward: %.0f", reward)
 env.close()

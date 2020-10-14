@@ -77,7 +77,7 @@ class BFS(PathFinder):
         if path is None:
             print("NO SOLUTION!")
             return []
-        print(path)
+
         last_pos = start
 
         for i in range(1, len(path)):
