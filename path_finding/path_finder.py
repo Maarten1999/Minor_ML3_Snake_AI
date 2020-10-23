@@ -1,5 +1,5 @@
 from path_finding.bfs_v2 import bfs
-
+from cygni import util
 
 class PathFinder:
     def __init__(self):
@@ -56,6 +56,8 @@ class NaivePathFinder(PathFinder):
 class BFS(PathFinder):
     def __init__(self):
         super(BFS, self).__init__()
+        self.actions = [util.Direction.DOWN, util.Direction.LEFT, util.Direction.UP, util.Direction.RIGHT]
+        self.last_action = 0
 
     def find_start_pos(self, environment) -> (int, int):
         for i in range(len(environment)):
@@ -94,3 +96,30 @@ class BFS(PathFinder):
             last_pos = path[i]
 
         return actions
+
+    def get_next_action(self, environment, width, height):
+        current = self.find_start_pos(environment=environment)
+
+        path = bfs.bfs(grid=environment, start=current, goal=3., width=width, height=height, wall=1.)
+        if path is None:
+            self.last_action+=1
+            print("NO SOLUTION!")
+            return self.actions[self.last_action%4]
+
+        print(path[0][0])
+
+        last_pos = current
+
+        if path[1][0] > last_pos[0]:
+            self.last_action = 2
+            return util.Direction.RIGHT
+        elif path[1][0] < last_pos[0]:
+            self.last_action = 0
+            return util.Direction.LEFT
+
+        if path[1][1] > last_pos[1]:
+            self.last_action = 3
+            return util.Direction.DOWN
+        elif path[1][1] < last_pos[1]:
+            self.last_action = 1
+            return util.Direction.UP

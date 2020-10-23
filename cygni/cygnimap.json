@@ -1,0 +1,128 @@
+{
+  'width': 46,
+  'height': 34,
+  'worldTick': 29,
+  'snakeInfos': [
+    {
+      'name': 'StayAliveBot',
+      'points': 10,
+      'positions': [
+        1448,
+        1447,
+        1446,
+        1445,
+        1444,
+        1443,
+        1442,
+        1441,
+        1440,
+        1394,
+        1348
+      ],
+      'tailProtectedForGameTicks': 0,
+      'id': 'd3409ae4-be79-4360-8fa9-8b4afcdb6dee'
+    },
+    {
+      'name': 'RandomBot',
+      'points': 10,
+      'positions': [
+        799,
+        800,
+        846,
+        845,
+        844,
+        890,
+        936,
+        935,
+        981,
+        1027,
+        1073
+      ],
+      'tailProtectedForGameTicks': 0,
+      'id': 'be26fdc6-ed69-43e4-b511-0b4cbb56ac5d'
+    },
+    {
+      'name': 'Snakey',
+      'points': 10,
+      'positions': [
+        913,
+        867,
+        866,
+        865,
+        864,
+        863,
+        862,
+        861,
+        860,
+        859,
+        858
+      ],
+      'tailProtectedForGameTicks': 0,
+      'id': '299be892-dc4f-4131-b4d0-c1e5d80eb9db'
+    },
+    {
+      'name': 'RandomBot',
+      'points': 10,
+      'positions': [
+        15,
+        14,
+        13,
+        12,
+        11,
+        10,
+        9,
+        8,
+        7,
+        6,
+        5
+      ],
+      'tailProtectedForGameTicks': 0,
+      'id': 'ee866d17-3eb0-4e02-9b52-321fcdb195b7'
+    },
+    {
+      'name': 'snake.py',
+      'points': 10,
+      'positions': [
+        1553,
+        1507,
+        1461,
+        1415,
+        1369,
+        1323,
+        1277,
+        1231,
+        1185,
+        1139,
+        1093
+      ],
+      'tailProtectedForGameTicks': 0,
+      'id': 'd1883b7a-2246-4d3c-bc22-b46a3d84316d'
+    }
+  ],
+  'foodPositions': [
+    714,
+    870,
+    1419
+  ],
+  'obstaclePositions': [
+    200,
+    530,
+    531,
+    532,
+    576,
+    577,
+    578,
+    622,
+    623,
+    624,
+    937,
+    938,
+    983,
+    984,
+    1074,
+    1075,
+    1102,
+    1120,
+    1121
+  ]
+}
