@@ -15,12 +15,13 @@ UP = 0
 RIGHT = 1
 DOWN = 2
 LEFT = 3
-
+#TODO: kleinere space
+#TODO: reward functie aanpassen
 env = SnakeEnv(grid_size=[24, 24], snake_size=2)
 obs = env.reset()  # construct instance of game
 contr = env.controller
 
-training = True
+training = False
 if training:
     model = DQN(MlpPolicy, env, verbose=1)
     model.learn(total_timesteps=20000)
