@@ -11,27 +11,44 @@ log.setLevel(logging.INFO)
 log.addHandler(logging.StreamHandler())
 
 # TODO: reward functie aanpassen
+n_snakes = 2
 
-env = SnakeEnv(grid_size=[9, 9], snake_size=2)
+# env = SnakeEnv(grid_size=[12, 12], snake_size=2, n_snakes=3, n_foods=3)
+env = SnakeEnv(grid_size=[9, 9], snake_size=2, n_snakes=n_snakes, n_foods=2)
 obs = env.reset()  # construct instance of game
+
 contr = env.controller
 
 training = False
 if training:
-    model = DQN(MlpPolicy, env, verbose=1, tensorboard_log="./tensorboard_logs/single/")
+    model = DQN(MlpPolicy, env, verbose=1, tensorboard_log="./tensorboard_logs/multi/")
     model.learn(total_timesteps=1000000)
-    model.save("./models/dqn_snake_single_player")
+    model.save("./models/dqn_snake_multi_player")
 else:
-    model = DQN.load("./models/dqn_snake_single_player")
+    model = DQN.load("./models/dqn_snake_multi_player")
 
 print("finished training, now use the trained model and render the env")
 n_episodes = 1
 
-for i in range(n_episodes):
-    done = False
-    while not done:
+turn = 0
+done_running = n_snakes
+while done_running > 0:
+    env.render()
+
+    if turn == 0:
+        turn = 1
         action, state = model.predict(obs)
         obs, reward, done, info = env.step(action)
+        if done:
+            done_running -= 1
+        env.render()
+
+    elif turn == 1:
+        turn = 0
+        action, state = model.predict(obs)
+        obs, reward, done, info = env.step(action)
+        if done:
+            done_running -= 1
         env.render()
 
 env.close()

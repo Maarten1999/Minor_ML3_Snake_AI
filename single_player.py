@@ -16,7 +16,7 @@ RIGHT = 1
 DOWN = 2
 LEFT = 3
 
-env = SnakeEnv(grid_size=[24, 24], snake_size=2)
+env = SnakeEnv(grid_size=[9, 9], snake_size=2)
 obs = env.reset()  # construct instance of game
 contr = env.controller
 
@@ -25,7 +25,7 @@ log.info("start game")
 while not done:
     env.render()
     # obs, reward, done, info = env.step(LEFT)  # pass action to step()
-    actions = solver.get_actions(obs, 24, 24)
+    actions = solver.get_actions(obs, 9, 9)
     if len(actions) == 0:
         done = True
     for action in actions:
