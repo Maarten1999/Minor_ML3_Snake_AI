@@ -1,6 +1,7 @@
 import argparse
 import json
 import logging
+import os
 import sys
 from datetime import datetime
 
@@ -11,7 +12,8 @@ from autobahn.asyncio.websocket import (WebSocketClientFactory,
                                         WebSocketClientProtocol)
 
 import asyncio
-from cygni import messages, util, cygni_snake as snake
+from cygni import messages, util
+from cygni.cygni_rl import cygni_snake_rl as snake
 
 log = logging.getLogger("client")
 log_levels = {
@@ -30,9 +32,10 @@ class SnakebotProtocol(WebSocketClientProtocol):
     def __init__(self):
         super(WebSocketClientProtocol, self).__init__()
 
-        self.msg_array = []
         self.link = ""
         self.snake = snake.get_snake()
+        self.msg_array = []
+        self.firstLine = True
         self.routing = {
             messages.GAME_ENDED: self._game_ended,
             messages.TOURNAMENT_ENDED: self._tournament_ended,
@@ -60,9 +63,6 @@ class SnakebotProtocol(WebSocketClientProtocol):
         msg = json.loads(payload.decode())
         log.debug("Message received: %s", msg)
 
-        if msg['type'] == 'se.cygni.snake.api.event.MapUpdateEvent':
-            self.msg_array.append(msg)
-
         self._route_message(msg)
 
     def onClose(self, wasClean, code, reason):
@@ -74,9 +74,6 @@ class SnakebotProtocol(WebSocketClientProtocol):
             self.heart_beat.cancel()
         else:
             self._done(None)
-
-        with open("./train_sessions/session " + datetime.now().strftime("%d-%m-%Y %H-%M-%S") + ".json", "w") as f:
-            json.dump(self.msg_array, f)
 
     def _done(self, task):
         loop.stop()
@@ -105,6 +102,7 @@ class SnakebotProtocol(WebSocketClientProtocol):
         self.sendClose()
 
     def _map_update(self, msg):
+
         width = msg['map']['width']
         height = msg['map']['height']
         map = [0.]*width * height
@@ -133,7 +131,7 @@ class SnakebotProtocol(WebSocketClientProtocol):
 
         map = np.reshape(map, (height, width))
 
-        direction = self.snake.get_next_move(map, width, height)
+        direction = self.snake.get_next_move(map)
         self._send(messages.register_move(str(direction), msg))
 
     def _snake_dead(self, msg):
