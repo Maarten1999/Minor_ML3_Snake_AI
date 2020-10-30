@@ -16,7 +16,7 @@ env = SnakeEnv(grid_size=[9, 9], snake_size=2)
 obs = env.reset()  # construct instance of game
 contr = env.controller
 
-training = False
+training = True
 if training:
     model = DQN(MlpPolicy, env, verbose=1, tensorboard_log="./tensorboard_logs/single/")
     model.learn(total_timesteps=1000000)
