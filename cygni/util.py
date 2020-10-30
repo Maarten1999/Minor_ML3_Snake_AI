@@ -1,6 +1,7 @@
 import math
 
 from enum import Enum
+import numpy as np
 
 
 def translate_position(position, map_width):
@@ -49,6 +50,19 @@ def is_within_square(coord, nw_coord, se_coord):
     se_x, se_y = se_coord
 
     return x >= nw_x and x <= se_x and y >= nw_y and y <= se_y
+
+
+def minimize_obs_space(game_map):
+    x, y = tuple(list(zip(*np.where(game_map == 2.)))[0])
+    Xt = len(game_map)
+    Yt = len(game_map[0])
+
+    obs_space = [None] * 4
+    obs_space[0] = game_map[x + 1][y] if x < Xt - 1 else 1.  # DOWN
+    obs_space[1] = game_map[x][y - 1] if y > 0 else 1.  # LEFT
+    obs_space[2] = game_map[x - 1][y] if x > 0 else 1.  # UP
+    obs_space[3] = game_map[x][y + 1] if y < Yt - 1 else 1.  # RIGHT
+    return obs_space
 
 
 class TileType(Enum):

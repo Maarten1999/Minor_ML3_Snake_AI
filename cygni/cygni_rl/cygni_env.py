@@ -19,52 +19,72 @@ class CygniEnv(gym.Env):
 
         self.current_step = 0
         self.steps = train_steps
-        self.state = self.read_map(train_steps[self.current_step])
+        self.state = np.array(self.read_map(train_steps[self.current_step]))
+        print(self.state)
         self.snake_pos = [0, 0]
 
         self.grid_size = [46, 34]  # default Cygni size
         self.actions = [util.Direction.DOWN, util.Direction.LEFT, util.Direction.UP, util.Direction.RIGHT]
         self.action_space = spaces.Discrete(4)
-        self.observation_space = spaces.Box(low=0, high=3, shape=(self.grid_size[1], self.grid_size[0]), dtype=np.uint8)
+        self.observation_space = spaces.Box(low=0, high=3, shape=self.state.shape,
+                                            dtype=np.uint8)  # shape = array of 4 [Down, Left, Up, Right]
+        # self.observation_space = spaces.Box(low=0, high=3, shape=(self.grid_size[1], self.grid_size[0]), dtype=np.uint8)
 
     def step(self, action):
         done = False
         reward = 0.0
         next_pos = [0, 0]
+        next_pos_value = 0
 
-        # look up snake head pos
-        for x in range(len(self.state)):
-            for y in range(len(self.state[x])):
-                if self.state[x][y] == 2:
-                    self.snake_pos = [x, y]
+        # # look up snake head pos
+        # for x in range(len(self.state)):
+        #     for y in range(len(self.state[x])):
+        #         if self.state[x][y] == 2:
+        #             self.snake_pos = [x, y]
 
         # calculate next pos coordinates
-        if action == util.Direction.LEFT:
-            next_pos = [self.snake_pos[0] - 1, self.snake_pos[1]]
-        elif action == util.Direction.RIGHT:
-            next_pos = [self.snake_pos[0] + 1, self.snake_pos[1]]
-        elif action == util.Direction.UP:
-            next_pos = [self.snake_pos[0], self.snake_pos[1] - 1]
-        elif action == util.Direction.DOWN:
-            next_pos = [self.snake_pos[0], self.snake_pos[1] + 1]
+        # if action == util.Direction.LEFT:
+        #     next_pos = [self.snake_pos[0] - 1, self.snake_pos[1]]
+        # elif action == util.Direction.RIGHT:
+        #     next_pos = [self.snake_pos[0] + 1, self.snake_pos[1]]
+        # elif action == util.Direction.UP:
+        #     next_pos = [self.snake_pos[0], self.snake_pos[1] - 1]
+        # elif action == util.Direction.DOWN:
+        #     next_pos = [self.snake_pos[0], self.snake_pos[1] + 1]
 
-        # calculate reward based on result after moving to next pos
-        if self.state[next_pos[0], next_pos[1]] == 1:
+        if action == util.Direction.LEFT:
+            next_pos_value = self.state[1]
+        elif action == util.Direction.RIGHT:
+            next_pos_value = self.state[3]
+        elif action == util.Direction.UP:
+            next_pos_value = self.state[2]
+        elif action == util.Direction.DOWN:
+            next_pos_value = self.state[0]
+
+            # calculate reward based on result after moving to next pos
+        # if self.state[next_pos[0], next_pos[1]] == 1:
+        #     reward -= 5  # punish for hitting anything
+        #     done = True
+        # elif next_pos[0] > self.grid_size[0] < next_pos[0] \
+        #         or next_pos[1] > self.grid_size[1] < next_pos[1]:
+        #     reward -= 5  # punish for going out of map
+        #     done = True
+        # elif self.state[next_pos[0], next_pos[1]] == 3:
+        #     reward += 10
+        # else:
+        #     reward += -0.1  # punish for doing nothing (warning, might decide to running into walls to avoid this)
+
+        if next_pos_value == 1:
             reward -= 5  # punish for hitting anything
             done = True
-        elif next_pos[0] > self.grid_size[0] < next_pos[0] \
-                or next_pos[1] > self.grid_size[1] < next_pos[1]:
-            reward -= 5  # punish for going out of map
-            done = True
-        elif self.state[next_pos[0], next_pos[1]] == 3:
+        elif next_pos_value == 3:
             reward += 10
         else:
             reward += -0.1  # punish for doing nothing (warning, might decide to running into walls to avoid this)
 
-
         self.current_step += 1
         if self.current_step >= len(self.steps):
-            self.current_step = 0   #TODO move on to next environment
+            self.current_step = 0  # TODO move on to next environment
 
         self.state = self.read_map(self.steps[self.current_step])
 
@@ -109,4 +129,6 @@ class CygniEnv(gym.Env):
         for s in food:
             environment_map[s] = 3.
 
-        return np.reshape(environment_map, (height, width))
+        # return np.reshape(environment_map, (height, width))
+
+        return util.minimize_obs_space(np.reshape(environment_map, (height, width)))
