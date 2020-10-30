@@ -27,7 +27,7 @@ class CygniEnv(gym.Env):
         self.actions = [util.Direction.DOWN, util.Direction.LEFT, util.Direction.UP, util.Direction.RIGHT]
         self.action_space = spaces.Discrete(4)
         self.observation_space = spaces.Box(low=0, high=3, shape=self.state.shape,
-                                            dtype=np.uint8)  # shape = array of 4 [Down, Left, Up, Right]
+                                            dtype=np.uint8)  # shape = array of 5 [Down, Left, Up, Right, Food_Direction]
         # self.observation_space = spaces.Box(low=0, high=3, shape=(self.grid_size[1], self.grid_size[0]), dtype=np.uint8)
 
     def step(self, action):

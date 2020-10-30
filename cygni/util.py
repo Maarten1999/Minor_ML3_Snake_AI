@@ -57,11 +57,40 @@ def minimize_obs_space(game_map):
     Xt = len(game_map)
     Yt = len(game_map[0])
 
-    obs_space = [None] * 4
+    obs_space = [None] * 5
     obs_space[0] = game_map[x + 1][y] if x < Xt - 1 else 1.  # DOWN
     obs_space[1] = game_map[x][y - 1] if y > 0 else 1.  # LEFT
     obs_space[2] = game_map[x - 1][y] if x > 0 else 1.  # UP
     obs_space[3] = game_map[x][y + 1] if y < Yt - 1 else 1.  # RIGHT
+
+    # Get coordinates of closest food object
+    dest_x, dest_y = Xt / 2, Yt / 2
+    food_pos = list(zip(*np.where(game_map == 3.)))
+    last_dist = get_euclidian_distance((0, 0), (Xt, Yt))
+    for food_x, food_y in food_pos:
+        # print("Food_X: %s , Food_Y: %s " % (food_x, food_y))
+        dist = get_euclidian_distance((x, y), (food_x, food_y))
+        if dist < last_dist:
+            last_dist = dist
+            dest_x, dest_y = food_x, food_y
+    # print("Dest_X: %s , Dest_Y: %s " % (dest_x, dest_y))
+    # print("x: %s , y: %s " % (x, y))
+
+    # Get x and y distance
+    diff_x = dest_x - x
+    diff_y = dest_y - y
+
+    # find direction based on distance
+    direction = 3  # LEFT
+    if diff_x > 0:
+        direction = 2  # DOWN
+    elif diff_x < 0:
+        direction = 0  # UP
+    elif diff_y > 0:
+        direction = 1  # RIGHT
+
+    obs_space[4] = direction
+
     return obs_space
 
 
