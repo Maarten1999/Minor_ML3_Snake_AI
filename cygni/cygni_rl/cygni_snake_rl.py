@@ -1,6 +1,8 @@
 import logging
 
 from stable_baselines import DQN
+import numpy as np
+from cygni.util import minimize_obs_space
 
 log = logging.getLogger("client.snake")
 model = DQN.load("./models/dqn_cygni_snake")
@@ -12,7 +14,8 @@ class Snake(object):
         self.snake_id = None
 
     def get_next_move(self, game_map):
-        action, state = model.predict(game_map)
+        obs_space = minimize_obs_space(game_map=game_map)
+        action, state = model.predict(np.array(obs_space))
         return action
 
     def on_game_ended(self):
