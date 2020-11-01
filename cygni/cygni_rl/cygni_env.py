@@ -75,12 +75,12 @@ class CygniEnv(gym.Env):
         #     reward += -0.1  # punish for doing nothing (warning, might decide to running into walls to avoid this)
 
         if next_pos_value == 1:
-            reward -= 5  # punish for hitting anything
+            reward -= 1  # punish for hitting anything
             done = True
         elif next_pos_value == 3:
-            reward += 10
+            reward += 1
         else:
-            reward += -0.1  # punish for doing nothing (warning, might decide to running into walls to avoid this)
+            reward += 0  # punish for doing nothing (warning, might decide to running into walls to avoid this)
 
         self.current_step += 1
         if self.current_step >= len(self.steps):

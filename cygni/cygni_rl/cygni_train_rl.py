@@ -33,5 +33,6 @@ env = CygniEnv(recordedSessions[randNr])
 obs = env.reset()  # construct instance of game
 
 model = DQN(MlpPolicy, env, verbose=1, tensorboard_log="./tensorboard_logs/single/")
+print("Training...")
 model.learn(total_timesteps=total_train_steps)
 model.save("./models/dqn_cygni_snake")
